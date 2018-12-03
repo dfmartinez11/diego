@@ -38,9 +38,9 @@ plt.plot(x,yobs, c="b" , label="observado")
 
 ######-----------------------------------------------------------------------------
 a=[]
-a.append(3.0)
+a.append(1.0)
 b=[]
-b.append(-4.0)
+b.append(-2.0)
 prob=[]
 print (" ")
 print ("Chi**2 de a,b = 1,1 es: ", chi(a,b) )
@@ -48,13 +48,13 @@ prob.append(-np.exp(chi(a,b)))
 
 #######-------------------3
 
-N=2000
+N=20000
 
 m=10000000
 minimo=0
-valorChi = 0
+valorChi = 10000
 for i in range(N):
-	b2 = b[i] + np.random.uniform(-0.5,0.5)	 
+    b2 = b[i] + np.random.uniform(-0.5,0.5)	 
 	a2 = a[i] + np.random.uniform(-0.5,0.5)
 	m1 = np.exp(-chi(yreal,f1(x,a[i],b[i])))
 	m2 = np.exp(-chi(yreal,f1(x,a2,b2)))
@@ -62,19 +62,24 @@ for i in range(N):
 	if al <1.0 :
 		betha = np.random.normal()
 		if (betha <= al):
+            #prob.append(np.exp(-chi(yreal,f1(x,a2,b2))))
 			a.append(a2)
 			b.append(b2)
+                        
 		else:
+            #prob.append(np.exp(-chi(yreal,f1(x,a[i],b[i]))))
 			a.append(a[i])
 			b.append(b[i])
-		
 	else:
+        #prob.append(np.exp(-chi(yreal,f1(x,a2,b2))))
 		a.append(a2)
 		b.append(b2)
-	if m1<m :
-		minimo = i
-		valorChi = m1
+    if(m1<m):
+        m=m1
+        minimo=i
+     
 
+	
 print ("chi minimo esta en la posicion:", minimo, " y tiene valor de ", valorChi)	
 print ("   ")
 print ("Mejores parametros= ","a: ", a[minimo], "b: ", b[minimo])
