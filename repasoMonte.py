@@ -10,8 +10,8 @@ def func(x):
     return x**2 - x
 yobs = func(xobs) + np.random.rand(N)
 plt.figure()
-v1 = plt.subplot(2,1,1)
-v1.scatter(xobs, yobs, c="r")
+v1 = plt.subplot(3,1,1)
+v1.plot(xobs, yobs, c="r")
 
 
 def funcObs(x,a,b):
@@ -19,7 +19,7 @@ def funcObs(x,a,b):
 
 def chi(obs , y):
     chi = np.sum( (obs - y)*(obs - y) )
-    return chi/(1.0*len(y))
+    return chi #/(1.0*len(y))
 
 proba = []
 a=[]
@@ -30,21 +30,22 @@ b.append(-7.0)
 proba.append(  np.exp(-chi(yobs , funcObs(xobs,a[0],b[0]))  )    )
 #print (proba)
 
-K = 100000
-s=0.1
+K = 20000
+s=0.55
 for i in range(0,K):
-    a2 = a[i] + np.random.normal(a[i],s)
-    b2 = b[i] + np.random.normal(b[i],s)  
-    c1 = np.exp(-chi(yobs , funcObs(xobs,a[i],b[i])))
-    c2 = np.exp(-chi(yobs , funcObs(xobs,a2,b2)))
-    razon = c1/c2
+    a2 = a[i] + np.random.uniform(-1,1)
+    b2 = b[i] + np.random.uniform(-1,1)  
+    c1 = -chi(yobs , funcObs(xobs,a[i],b[i]))
+    c2 = -chi(yobs , funcObs(xobs,a2,b2))
+    razon = c2/c1
+    print (razon)
     alfa = np.random.random()
-    if(razon >= 1.0):
+    if(razon < 1.0):
         a.append(a2)
         b.append(b2)
         proba.append( np.exp(-chi(yobs , funcObs(xobs,a2,b2))) )
     else:
-        if(razon >= alfa):
+        if(razon < alfa):
             a.append(a2)
             b.append(b2)
             proba.append( np.exp(-chi(yobs , funcObs(xobs,a2,b2))) )
@@ -52,16 +53,25 @@ for i in range(0,K):
             a.append(a[i])
             b.append(b[i])
             proba.append( np.exp(-chi(yobs , funcObs(xobs,a[i],b[i]))) )
-
+            
 posicion = np.argmax(proba)
 print ("parametros--- a=", a[posicion], " b=", b[posicion])
 print ("probabilidad de parametros =", proba[posicion])
 y = funcObs(xobs,a[posicion],b[posicion])
-v1.plot(xobs,y, c="g")
+v1.scatter(xobs,y, c="g")
 plt.legend(["observados","parametro"])
 
-v2 = plt.subplot(2,1,2)
+v2 = plt.subplot(3,1,2)
 v2.scatter(xobs, y)
-v2.plot(xobs,func(xobs), c="g")
+v2.plot(xobs,func(xobs), c="r")
 plt.legend(["parametros","real"])
+
+v3 = plt.subplot(3,1,3)
+v3.scatter(a, b)
+plt.legend(["parametros a VS b"])
 plt.savefig("montecarloMethod.png")
+
+#print ("PARAMETROS")
+#print(a)
+#print(b)
+
