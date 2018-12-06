@@ -59,7 +59,7 @@ void runge(double *x, double condicionI){
     t[0] = 0.0;
     for(int i=1 ; i<N ;i++){
         double k1 = dt*( cos(t[i-1]) );
-        double k2 = dt*( cos(t[i-1]) + (0.5*k1)  );
+        double k2 = dt*( cos(t[i-1]) + (0.5*dt)  );
         x[i] = x[i-1] + k2;
     }
 }
@@ -73,3 +73,18 @@ void leapf(double *x , double cond){
     }
     
 }
+
+/*
+Sea y un funcion de la variable x y der la Derivaday ciertas condiciones iniciales
+euler:
+dx la distancia entre puntos
+x[i] = x[i-1] + dt
+y[i] = y[i-1] + dt*der(y[i-1],x[i-1])
+leaap frog:
+y[i] = y[i-2] + 2*dt*der(y[i-1],x[i-1])
+runge kutta:
+k1 = dt*der( y[i-1],x[i-1] )
+k2 = dt*der( y[i-1]+(k1*0.5),x[i-1]+(dt*0.5) )
+y[i]=y[i-1]+k2
+
+**/
