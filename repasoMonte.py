@@ -38,7 +38,7 @@ for i in range(0,K):
     c1 = -chi(yobs , funcObs(xobs,a[i],b[i]))
     c2 = -chi(yobs , funcObs(xobs,a2,b2))
     razon = c2/c1
-    print (razon)
+    #print (razon)
     alfa = np.random.random()
     if(razon < 1.0):
         a.append(a2)
